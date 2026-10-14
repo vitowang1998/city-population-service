@@ -1,5 +1,6 @@
 package com.example.citypopulationservice;
 
+import com.example.citypopulationservice.repository.CityRepository;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,14 +16,11 @@ public class CityPopulationServiceApplication {
     }
 
     @Bean
-    ApplicationRunner verifyDatabase(JdbcTemplate jdbcTemplate) {
+    ApplicationRunner verifyDatabase(JdbcTemplate jdbcTemplate, CityRepository cityRepository) {
         return args -> {
-            Integer count = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM city_population",
-                    Integer.class
-            );
+            Long population = cityRepository.getPopulation("Canada", "Toronto");
 
-            System.out.println("City count = " + count);
+            System.out.println("Toronto population = " + population);
         };
     }
 
