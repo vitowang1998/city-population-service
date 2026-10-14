@@ -1,11 +1,10 @@
 package com.example.citypopulationservice;
 
-import com.example.citypopulationservice.repository.CityRepository;
+import com.example.citypopulationservice.service.CityService;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootApplication
 public class CityPopulationServiceApplication {
@@ -16,9 +15,9 @@ public class CityPopulationServiceApplication {
     }
 
     @Bean
-    ApplicationRunner verifyDatabase(JdbcTemplate jdbcTemplate, CityRepository cityRepository) {
+    ApplicationRunner verifyDatabase(CityService cityService) {
         return args -> {
-            Long population = cityRepository.getPopulation("Canada", "Toronto");
+            Long population = cityService.getPopulation("Canada", "Toronto");
 
             System.out.println("Toronto population = " + population);
         };
