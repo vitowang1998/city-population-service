@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.core.KafkaTemplate;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
@@ -21,20 +22,21 @@ public class CityPopulationServiceApplication {
     ApplicationRunner verifyDatabase(CityService cityService) {
         return args -> {
             Long population = cityService.getPopulation("Canada", "Toronto");
-
+            List<String> cities = cityService.getCitiesByCountry("Canada");
             System.out.println("Toronto population = " + population);
+            System.out.println("Cities in Canada are: " + cities);
         };
     }
 
-    @Bean
-    ApplicationRunner verifyKafka(KafkaTemplate<String, String> kafkaTemplate) {
-        return args -> {
-            kafkaTemplate.send(
-                    "city-population-requests",
-                    "Canada, Toronto"
-            ).get(10, TimeUnit.SECONDS);
-
-            System.out.println("Kafka message sent.");
-        };
-    }
+//    @Bean
+//    ApplicationRunner verifyKafka(KafkaTemplate<String, String> kafkaTemplate) {
+//        return args -> {
+//            kafkaTemplate.send(
+//                    "city-population-requests",
+//                    "Canada, Toronto"
+//            ).get(10, TimeUnit.SECONDS);
+//
+//            System.out.println("Kafka message sent.");
+//        };
+//    }
 }

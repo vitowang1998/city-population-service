@@ -3,6 +3,8 @@ package com.example.citypopulationservice.repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class CityRepository{
 
@@ -24,6 +26,19 @@ public class CityRepository{
             Long.class,
             country,
             city
+        );
+    }
+
+    public List<String> getCitiesByCountry(String country) {
+        String sql = """
+            SELECT city
+            FROM city_population
+            WHERE country = ?
+            """;
+        return jdbcTemplate.queryForList(
+                sql,
+                String.class,
+                country
         );
     }
 }

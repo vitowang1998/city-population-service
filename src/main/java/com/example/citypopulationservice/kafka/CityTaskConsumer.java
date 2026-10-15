@@ -16,14 +16,23 @@ public class CityTaskConsumer {
     @KafkaListener(topics = "city-population-requests")
     public void handle(String message) {
 
-        String[] parts = message.split(",", 2);
+        String[] parts = message.split(",", 3);
 
-        String country = parts[0].trim();
-        String city = parts[1].trim();
+        // Temporarily skip old-format messages
+        if (parts.length != 3) {
+            System.out.println(
+                    "Skipping old/invalid message: " + message
+            );
+            return;
+        }
+
+        String correlationId = parts[0].trim();
+        String country = parts[1].trim();
+        String city = parts[2].trim();
 
         long population = cityRepository.getPopulation(country, city);
 
-        System.out.println("Kafka worker returns: " + city + " population = " + population);
+        System.out.println("Request = " + correlationId + ": " + city + " population = " + population);
     }
 
 
