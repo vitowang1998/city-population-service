@@ -5,6 +5,9 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.kafka.core.KafkaTemplate;
+
+import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
 public class CityPopulationServiceApplication {
@@ -23,4 +26,15 @@ public class CityPopulationServiceApplication {
         };
     }
 
+    @Bean
+    ApplicationRunner verifyKafka(KafkaTemplate<String, String> kafkaTemplate) {
+        return args -> {
+            kafkaTemplate.send(
+                    "city-population-requests",
+                    "Canada, Toronto"
+            ).get(10, TimeUnit.SECONDS);
+
+            System.out.println("Kafka message sent.");
+        };
+    }
 }
